@@ -1,0 +1,125 @@
+from sklearn import model_selection, metrics
+
+from sklearn import svm
+from sklearn.naive_bayes import GaussianNB 
+from sklearn.ensemble import RandomForestClassifier
+
+from imblearn.ensemble import EasyEnsemble
+from imblearn.over_sampling import SMOTE 
+
+import numpy as np
+import pandas as pd
+
+#read csv file 
+myData = pd.read_csv ('./bupa.csv')
+
+X = myData.iloc[:,:-1].values
+y = myData.iloc[:,-1].values
+
+
+
+#EasyEnsemble
+
+ee = EasyEnsemble(random_state=42) 
+X_res, y_res = ee.fit_resample(X, y) 
+
+x_train, x_test, y_train, y_test = model_selection.train_test_split(X, y, random_state=0)
+x_train_res, x_test_res, y_train_res, y_test_res = model_selection.train_test_split(X_res, y_res, random_state=0)
+
+clf1 = GaussianNB()
+clf1_res = GaussianNB()
+
+clf2 = RandomForestClassifier(n_estimators=5, criterion='entropy', max_depth=2)
+clf2_res = RandomForestClassifier(n_estimators=5, criterion='entropy', max_depth=2)
+
+clf3 = svm.SVC(kernel='linear', C = 1.0)
+clf3_res = svm.SVC(kernel='linear', C = 1.0)
+ 
+clf1.fit(x_train, y_train)    
+clf2.fit(x_train, y_train)
+clf3.fit(x_train, y_train)
+
+y_predicted1 = clf1.predict(x_test)
+y_predicted2 = clf2.predict(x_test)
+y_predicted3 = clf3.predict(x_test)
+
+precision1 = metrics.precision_score(y_test,y_predicted1,average='macro')
+precision2 = metrics.precision_score(y_test,y_predicted2,average='macro')
+precision3 = metrics.precision_score(y_test,y_predicted3,average='macro')
+
+print("PrecisionNB: %f" % precision1)
+print("PrecisionRF: %f" % precision2)
+print("PrecisionLSVM: %f" % precision3)
+
+
+clf1_res.fit(x_train_res, y_train_res)
+clf2_res.fit(x_train_res, y_train_res)
+clf3_res.fit(x_train_res, y_train_res)
+
+y_predicted1_res = clf1_res.predict(x_test_res)
+y_predicted2_res = clf2_res.predict(x_test_res)
+y_predicted3_res = clf3_res.predict(x_test_res)
+
+precision1_res = metrics.precision_score(y_test,y_predicted1_res,average='macro')
+precision2_res = metrics.precision_score(y_test,y_predicted2_res,average='macro')
+precision3_res = metrics.precision_score(y_test,y_predicted3_res,average='macro')
+
+print("PrecisionNB: %f" % precision1_res)
+print("PrecisionRF: %f" % precision2_res)
+print("PrecisionLSVM: %f" % precision3_res)
+
+
+#################################################################################################################
+
+#SMOTE
+
+
+sm = SMOTE(random_state=42)
+X_res1, y_res1 = sm.fit_resample(X, y)
+
+x_train, x_test, y_train, y_test = model_selection.train_test_split(X, y, random_state=0)
+x_train_res1, x_test_res1, y_train_res1, y_test_res1 = model_selection.train_test_split(X_res1, y_res1, random_state=0)
+
+clf1 = GaussianNB()
+clf1_res1 = GaussianNB()
+
+clf2 = RandomForestClassifier(n_estimators=5, criterion='entropy', max_depth=2)
+clf2_res1 = RandomForestClassifier(n_estimators=5, criterion='entropy', max_depth=2)
+
+clf3 = svm.SVC(kernel='linear', C = 1.0)
+clf3_res1 = svm.SVC(kernel='linear', C = 1.0)
+ 
+clf1.fit(x_train, y_train)    
+clf2.fit(x_train, y_train)
+clf3.fit(x_train, y_train)
+
+y_predicted1 = clf1.predict(x_test)
+y_predicted2 = clf2.predict(x_test)
+y_predicted3 = clf3.predict(x_test)
+
+precision1 = metrics.precision_score(y_test,y_predicted1,average='macro')
+precision2 = metrics.precision_score(y_test,y_predicted2,average='macro')
+precision3 = metrics.precision_score(y_test,y_predicted3,average='macro')
+
+print("PrecisionNB: %f" % precision1)
+print("PrecisionRF: %f" % precision2)
+print("PrecisionLSVM: %f" % precision3)
+
+
+clf1_res1.fit(x_train_res1, y_train_res1)
+clf2_res1.fit(x_train_res1, y_train_res1)
+clf3_res1.fit(x_train_res1, y_train_res1)
+
+y_predicted1_res1 = clf1_res1.predict(x_test_res1)
+y_predicted2_res1 = clf2_res1.predict(x_test_res1)
+y_predicted3_res1 = clf3_res1.predict(x_test_res1)
+
+precision1_res1 = metrics.precision_score(y_test,y_predicted1_res1,average='macro')
+precision2_res1 = metrics.precision_score(y_test,y_predicted2_res1,average='macro')
+precision3_res1 = metrics.precision_score(y_test,y_predicted3_res1,average='macro')
+
+print("PrecisionNB: %f" % precision1_res1)
+print("PrecisionRF: %f" % precision2_res1)
+print("PrecisionLSVM: %f" % precision3_res1)
+
+
